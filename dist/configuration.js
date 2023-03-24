@@ -32,9 +32,6 @@ class Configuration {
         if (this.organization) {
             this.baseOptions.headers['OpenAI-Organization'] = this.organization;
         }
-        if (!this.formDataCtor) {
-            this.formDataCtor = require("form-data");
-        }
     }
     /**
      * Check if the given MIME is a JSON MIME.

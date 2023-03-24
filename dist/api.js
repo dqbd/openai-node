@@ -23,7 +23,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OpenAIApi = exports.OpenAIApiFactory = exports.OpenAIApiFp = exports.OpenAIApiAxiosParamCreator = exports.CreateImageRequestResponseFormatEnum = exports.CreateImageRequestSizeEnum = exports.ChatCompletionResponseMessageRoleEnum = exports.ChatCompletionRequestMessageRoleEnum = void 0;
-const axios_1 = require("axios");
 // Some imports not used depending on template conditions
 // @ts-ignore
 const common_1 = require("./common");
@@ -1005,7 +1004,7 @@ exports.OpenAIApiFp = function (configuration) {
         cancelFineTune(fineTuneId, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.cancelFineTune(fineTuneId, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1019,20 +1018,7 @@ exports.OpenAIApiFp = function (configuration) {
         createAnswer(createAnswerRequest, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.createAnswer(createAnswerRequest, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
-            });
-        },
-        /**
-         *
-         * @summary Creates a completion for the chat message
-         * @param {CreateChatCompletionRequest} createChatCompletionRequest
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createChatCompletion(createChatCompletionRequest, options) {
-            return __awaiter(this, void 0, void 0, function* () {
-                const localVarAxiosArgs = yield localVarAxiosParamCreator.createChatCompletion(createChatCompletionRequest, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1046,22 +1032,32 @@ exports.OpenAIApiFp = function (configuration) {
         createClassification(createClassificationRequest, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.createClassification(createClassificationRequest, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
-         *
-         * @summary Creates a completion for the provided prompt and parameters
-         * @param {CreateCompletionRequest} createCompletionRequest
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCompletion(createCompletionRequest, options) {
-            return __awaiter(this, void 0, void 0, function* () {
-                const localVarAxiosArgs = yield localVarAxiosParamCreator.createCompletion(createCompletionRequest, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
-            });
-        },
+        *
+        * @summary Creates a completion for the chat message
+        * @param {CreateChatCompletionRequest} createChatCompletionRequest
+        * @param {*} [options] Override http request option.
+        * @throws {RequiredError}
+        */
+        createChatCompletion: (() => {
+            function createChatCompletion(createChatCompletionRequest, options) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    if (createChatCompletionRequest.stream) {
+                        const localVarAxiosArgs = yield localVarAxiosParamCreator.createChatCompletion(Object.assign(Object.assign({}, createChatCompletionRequest), { stream: true }), options);
+                        return common_1.createStreamFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
+                    }
+                    else {
+                        const localVarAxiosArgs = yield localVarAxiosParamCreator.createChatCompletion(Object.assign(Object.assign({}, createChatCompletionRequest), { stream: false }), options);
+                        return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
+                    }
+                });
+            }
+            ;
+            return createChatCompletion;
+        })(),
         /**
          *
          * @summary Creates a new edit for the provided input, instruction, and parameters.
@@ -1072,7 +1068,7 @@ exports.OpenAIApiFp = function (configuration) {
         createEdit(createEditRequest, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.createEdit(createEditRequest, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1085,7 +1081,7 @@ exports.OpenAIApiFp = function (configuration) {
         createEmbedding(createEmbeddingRequest, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.createEmbedding(createEmbeddingRequest, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1099,9 +1095,32 @@ exports.OpenAIApiFp = function (configuration) {
         createFile(file, purpose, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.createFile(file, purpose, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
+        /**
+        *
+        * @summary Creates a completion for the provided prompt and parameters
+        * @param {CreateCompletionRequest} createCompletionRequest
+        * @param {*} [options] Override http request option.
+        * @throws {RequiredError}
+        */
+        createCompletion: (() => {
+            function createCompletion(createCompletionRequest, options) {
+                return __awaiter(this, void 0, void 0, function* () {
+                    if (createCompletionRequest.stream) {
+                        const localVarAxiosArgs = yield localVarAxiosParamCreator.createCompletion(Object.assign(Object.assign({}, createCompletionRequest), { stream: true }), options);
+                        return common_1.createStreamFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
+                    }
+                    else {
+                        const localVarAxiosArgs = yield localVarAxiosParamCreator.createCompletion(Object.assign(Object.assign({}, createCompletionRequest), { stream: false }), options);
+                        return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
+                    }
+                });
+            }
+            ;
+            return createCompletion;
+        })(),
         /**
          *
          * @summary Creates a job that fine-tunes a specified model from a given dataset.  Response includes details of the enqueued job including job status and the name of the fine-tuned models once complete.  [Learn more about Fine-tuning](/docs/guides/fine-tuning)
@@ -1112,7 +1131,7 @@ exports.OpenAIApiFp = function (configuration) {
         createFineTune(createFineTuneRequest, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.createFineTune(createFineTuneRequest, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1125,7 +1144,7 @@ exports.OpenAIApiFp = function (configuration) {
         createImage(createImageRequest, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.createImage(createImageRequest, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1144,7 +1163,7 @@ exports.OpenAIApiFp = function (configuration) {
         createImageEdit(image, prompt, mask, n, size, responseFormat, user, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.createImageEdit(image, prompt, mask, n, size, responseFormat, user, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1161,7 +1180,7 @@ exports.OpenAIApiFp = function (configuration) {
         createImageVariation(image, n, size, responseFormat, user, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.createImageVariation(image, n, size, responseFormat, user, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1174,7 +1193,7 @@ exports.OpenAIApiFp = function (configuration) {
         createModeration(createModerationRequest, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.createModeration(createModerationRequest, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1189,7 +1208,7 @@ exports.OpenAIApiFp = function (configuration) {
         createSearch(engineId, createSearchRequest, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.createSearch(engineId, createSearchRequest, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1207,7 +1226,7 @@ exports.OpenAIApiFp = function (configuration) {
         createTranscription(file, model, prompt, responseFormat, temperature, language, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.createTranscription(file, model, prompt, responseFormat, temperature, language, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1224,7 +1243,7 @@ exports.OpenAIApiFp = function (configuration) {
         createTranslation(file, model, prompt, responseFormat, temperature, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.createTranslation(file, model, prompt, responseFormat, temperature, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1237,7 +1256,7 @@ exports.OpenAIApiFp = function (configuration) {
         deleteFile(fileId, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.deleteFile(fileId, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1250,7 +1269,7 @@ exports.OpenAIApiFp = function (configuration) {
         deleteModel(model, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.deleteModel(model, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1263,7 +1282,7 @@ exports.OpenAIApiFp = function (configuration) {
         downloadFile(fileId, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.downloadFile(fileId, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1276,7 +1295,7 @@ exports.OpenAIApiFp = function (configuration) {
         listEngines(options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.listEngines(options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1288,7 +1307,7 @@ exports.OpenAIApiFp = function (configuration) {
         listFiles(options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.listFiles(options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1302,7 +1321,7 @@ exports.OpenAIApiFp = function (configuration) {
         listFineTuneEvents(fineTuneId, stream, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.listFineTuneEvents(fineTuneId, stream, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1314,7 +1333,7 @@ exports.OpenAIApiFp = function (configuration) {
         listFineTunes(options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.listFineTunes(options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1326,7 +1345,7 @@ exports.OpenAIApiFp = function (configuration) {
         listModels(options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.listModels(options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1340,7 +1359,7 @@ exports.OpenAIApiFp = function (configuration) {
         retrieveEngine(engineId, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.retrieveEngine(engineId, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1353,7 +1372,7 @@ exports.OpenAIApiFp = function (configuration) {
         retrieveFile(fileId, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.retrieveFile(fileId, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1366,7 +1385,7 @@ exports.OpenAIApiFp = function (configuration) {
         retrieveFineTune(fineTuneId, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.retrieveFineTune(fineTuneId, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
         /**
@@ -1379,7 +1398,7 @@ exports.OpenAIApiFp = function (configuration) {
         retrieveModel(model, options) {
             return __awaiter(this, void 0, void 0, function* () {
                 const localVarAxiosArgs = yield localVarAxiosParamCreator.retrieveModel(model, options);
-                return common_1.createRequestFunction(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
+                return common_1.createRequestFunction(localVarAxiosArgs, base_1.BASE_PATH, configuration);
             });
         },
     };
@@ -1388,7 +1407,7 @@ exports.OpenAIApiFp = function (configuration) {
  * OpenAIApi - factory interface
  * @export
  */
-exports.OpenAIApiFactory = function (configuration, basePath, axios) {
+exports.OpenAIApiFactory = function (configuration, basePath) {
     const localVarFp = exports.OpenAIApiFp(configuration);
     return {
         /**
@@ -1399,7 +1418,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         cancelFineTune(fineTuneId, options) {
-            return localVarFp.cancelFineTune(fineTuneId, options).then((request) => request(axios, basePath));
+            return localVarFp.cancelFineTune(fineTuneId, options).then((request) => request(basePath));
         },
         /**
          *
@@ -1410,17 +1429,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         createAnswer(createAnswerRequest, options) {
-            return localVarFp.createAnswer(createAnswerRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
-         *
-         * @summary Creates a completion for the chat message
-         * @param {CreateChatCompletionRequest} createChatCompletionRequest
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createChatCompletion(createChatCompletionRequest, options) {
-            return localVarFp.createChatCompletion(createChatCompletionRequest, options).then((request) => request(axios, basePath));
+            return localVarFp.createAnswer(createAnswerRequest, options).then((request) => request(basePath));
         },
         /**
          *
@@ -1431,18 +1440,27 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         createClassification(createClassificationRequest, options) {
-            return localVarFp.createClassification(createClassificationRequest, options).then((request) => request(axios, basePath));
+            return localVarFp.createClassification(createClassificationRequest, options).then((request) => request(basePath));
         },
         /**
-         *
-         * @summary Creates a completion for the provided prompt and parameters
-         * @param {CreateCompletionRequest} createCompletionRequest
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCompletion(createCompletionRequest, options) {
-            return localVarFp.createCompletion(createCompletionRequest, options).then((request) => request(axios, basePath));
-        },
+        *
+        * @summary Creates a completion for the chat message
+        * @param {CreateChatCompletionRequest} createChatCompletionRequest
+        * @param {*} [options] Override http request option.
+        * @throws {RequiredError}
+        */
+        createChatCompletion: (() => {
+            function createChatCompletion(createChatCompletionRequest, options) {
+                if (createChatCompletionRequest.stream) {
+                    return localVarFp.createChatCompletion(Object.assign(Object.assign({}, createChatCompletionRequest), { stream: true }), options).then((request) => request(basePath));
+                }
+                else {
+                    return localVarFp.createChatCompletion(Object.assign(Object.assign({}, createChatCompletionRequest), { stream: false }), options).then((request) => request(basePath));
+                }
+            }
+            ;
+            return createChatCompletion;
+        })(),
         /**
          *
          * @summary Creates a new edit for the provided input, instruction, and parameters.
@@ -1451,7 +1469,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         createEdit(createEditRequest, options) {
-            return localVarFp.createEdit(createEditRequest, options).then((request) => request(axios, basePath));
+            return localVarFp.createEdit(createEditRequest, options).then((request) => request(basePath));
         },
         /**
          *
@@ -1461,7 +1479,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         createEmbedding(createEmbeddingRequest, options) {
-            return localVarFp.createEmbedding(createEmbeddingRequest, options).then((request) => request(axios, basePath));
+            return localVarFp.createEmbedding(createEmbeddingRequest, options).then((request) => request(basePath));
         },
         /**
          *
@@ -1472,8 +1490,27 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         createFile(file, purpose, options) {
-            return localVarFp.createFile(file, purpose, options).then((request) => request(axios, basePath));
+            return localVarFp.createFile(file, purpose, options).then((request) => request(basePath));
         },
+        /**
+        *
+        * @summary Creates a completion for the provided prompt and parameters
+        * @param {CreateCompletionRequest} createCompletionRequest
+        * @param {*} [options] Override http request option.
+        * @throws {RequiredError}
+        */
+        createCompletion: (() => {
+            function createCompletion(createCompletionRequest, options) {
+                if (createCompletionRequest.stream) {
+                    return localVarFp.createCompletion(Object.assign(Object.assign({}, createCompletionRequest), { stream: true }), options).then((request) => request(basePath));
+                }
+                else {
+                    return localVarFp.createCompletion(Object.assign(Object.assign({}, createCompletionRequest), { stream: false }), options).then((request) => request(basePath));
+                }
+            }
+            ;
+            return createCompletion;
+        })(),
         /**
          *
          * @summary Creates a job that fine-tunes a specified model from a given dataset.  Response includes details of the enqueued job including job status and the name of the fine-tuned models once complete.  [Learn more about Fine-tuning](/docs/guides/fine-tuning)
@@ -1482,7 +1519,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         createFineTune(createFineTuneRequest, options) {
-            return localVarFp.createFineTune(createFineTuneRequest, options).then((request) => request(axios, basePath));
+            return localVarFp.createFineTune(createFineTuneRequest, options).then((request) => request(basePath));
         },
         /**
          *
@@ -1492,7 +1529,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         createImage(createImageRequest, options) {
-            return localVarFp.createImage(createImageRequest, options).then((request) => request(axios, basePath));
+            return localVarFp.createImage(createImageRequest, options).then((request) => request(basePath));
         },
         /**
          *
@@ -1508,7 +1545,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         createImageEdit(image, prompt, mask, n, size, responseFormat, user, options) {
-            return localVarFp.createImageEdit(image, prompt, mask, n, size, responseFormat, user, options).then((request) => request(axios, basePath));
+            return localVarFp.createImageEdit(image, prompt, mask, n, size, responseFormat, user, options).then((request) => request(basePath));
         },
         /**
          *
@@ -1522,7 +1559,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         createImageVariation(image, n, size, responseFormat, user, options) {
-            return localVarFp.createImageVariation(image, n, size, responseFormat, user, options).then((request) => request(axios, basePath));
+            return localVarFp.createImageVariation(image, n, size, responseFormat, user, options).then((request) => request(basePath));
         },
         /**
          *
@@ -1532,7 +1569,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         createModeration(createModerationRequest, options) {
-            return localVarFp.createModeration(createModerationRequest, options).then((request) => request(axios, basePath));
+            return localVarFp.createModeration(createModerationRequest, options).then((request) => request(basePath));
         },
         /**
          *
@@ -1544,7 +1581,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         createSearch(engineId, createSearchRequest, options) {
-            return localVarFp.createSearch(engineId, createSearchRequest, options).then((request) => request(axios, basePath));
+            return localVarFp.createSearch(engineId, createSearchRequest, options).then((request) => request(basePath));
         },
         /**
          *
@@ -1559,7 +1596,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         createTranscription(file, model, prompt, responseFormat, temperature, language, options) {
-            return localVarFp.createTranscription(file, model, prompt, responseFormat, temperature, language, options).then((request) => request(axios, basePath));
+            return localVarFp.createTranscription(file, model, prompt, responseFormat, temperature, language, options).then((request) => request(basePath));
         },
         /**
          *
@@ -1573,7 +1610,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         createTranslation(file, model, prompt, responseFormat, temperature, options) {
-            return localVarFp.createTranslation(file, model, prompt, responseFormat, temperature, options).then((request) => request(axios, basePath));
+            return localVarFp.createTranslation(file, model, prompt, responseFormat, temperature, options).then((request) => request(basePath));
         },
         /**
          *
@@ -1583,7 +1620,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         deleteFile(fileId, options) {
-            return localVarFp.deleteFile(fileId, options).then((request) => request(axios, basePath));
+            return localVarFp.deleteFile(fileId, options).then((request) => request(basePath));
         },
         /**
          *
@@ -1593,7 +1630,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         deleteModel(model, options) {
-            return localVarFp.deleteModel(model, options).then((request) => request(axios, basePath));
+            return localVarFp.deleteModel(model, options).then((request) => request(basePath));
         },
         /**
          *
@@ -1603,7 +1640,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         downloadFile(fileId, options) {
-            return localVarFp.downloadFile(fileId, options).then((request) => request(axios, basePath));
+            return localVarFp.downloadFile(fileId, options).then((request) => request(basePath));
         },
         /**
          *
@@ -1613,7 +1650,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         listEngines(options) {
-            return localVarFp.listEngines(options).then((request) => request(axios, basePath));
+            return localVarFp.listEngines(options).then((request) => request(basePath));
         },
         /**
          *
@@ -1622,7 +1659,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         listFiles(options) {
-            return localVarFp.listFiles(options).then((request) => request(axios, basePath));
+            return localVarFp.listFiles(options).then((request) => request(basePath));
         },
         /**
          *
@@ -1633,7 +1670,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         listFineTuneEvents(fineTuneId, stream, options) {
-            return localVarFp.listFineTuneEvents(fineTuneId, stream, options).then((request) => request(axios, basePath));
+            return localVarFp.listFineTuneEvents(fineTuneId, stream, options).then((request) => request(basePath));
         },
         /**
          *
@@ -1642,7 +1679,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         listFineTunes(options) {
-            return localVarFp.listFineTunes(options).then((request) => request(axios, basePath));
+            return localVarFp.listFineTunes(options).then((request) => request(basePath));
         },
         /**
          *
@@ -1651,7 +1688,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         listModels(options) {
-            return localVarFp.listModels(options).then((request) => request(axios, basePath));
+            return localVarFp.listModels(options).then((request) => request(basePath));
         },
         /**
          *
@@ -1662,7 +1699,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         retrieveEngine(engineId, options) {
-            return localVarFp.retrieveEngine(engineId, options).then((request) => request(axios, basePath));
+            return localVarFp.retrieveEngine(engineId, options).then((request) => request(basePath));
         },
         /**
          *
@@ -1672,7 +1709,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         retrieveFile(fileId, options) {
-            return localVarFp.retrieveFile(fileId, options).then((request) => request(axios, basePath));
+            return localVarFp.retrieveFile(fileId, options).then((request) => request(basePath));
         },
         /**
          *
@@ -1682,7 +1719,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         retrieveFineTune(fineTuneId, options) {
-            return localVarFp.retrieveFineTune(fineTuneId, options).then((request) => request(axios, basePath));
+            return localVarFp.retrieveFineTune(fineTuneId, options).then((request) => request(basePath));
         },
         /**
          *
@@ -1692,7 +1729,7 @@ exports.OpenAIApiFactory = function (configuration, basePath, axios) {
          * @throws {RequiredError}
          */
         retrieveModel(model, options) {
-            return localVarFp.retrieveModel(model, options).then((request) => request(axios, basePath));
+            return localVarFp.retrieveModel(model, options).then((request) => request(basePath));
         },
     };
 };
@@ -1712,7 +1749,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     cancelFineTune(fineTuneId, options) {
-        return exports.OpenAIApiFp(this.configuration).cancelFineTune(fineTuneId, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).cancelFineTune(fineTuneId, options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -1724,18 +1761,15 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     createAnswer(createAnswerRequest, options) {
-        return exports.OpenAIApiFp(this.configuration).createAnswer(createAnswerRequest, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).createAnswer(createAnswerRequest, options).then((request) => request(this.basePath));
     }
-    /**
-     *
-     * @summary Creates a completion for the chat message
-     * @param {CreateChatCompletionRequest} createChatCompletionRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof OpenAIApi
-     */
     createChatCompletion(createChatCompletionRequest, options) {
-        return exports.OpenAIApiFp(this.configuration).createChatCompletion(createChatCompletionRequest, options).then((request) => request(this.axios, this.basePath));
+        if (createChatCompletionRequest.stream) {
+            return exports.OpenAIApiFp(this.configuration).createChatCompletion(Object.assign(Object.assign({}, createChatCompletionRequest), { stream: true }), options).then((request) => request(this.basePath));
+        }
+        else {
+            return exports.OpenAIApiFp(this.configuration).createChatCompletion(Object.assign(Object.assign({}, createChatCompletionRequest), { stream: false }), options).then((request) => request(this.basePath));
+        }
     }
     /**
      *
@@ -1747,18 +1781,15 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     createClassification(createClassificationRequest, options) {
-        return exports.OpenAIApiFp(this.configuration).createClassification(createClassificationRequest, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).createClassification(createClassificationRequest, options).then((request) => request(this.basePath));
     }
-    /**
-     *
-     * @summary Creates a completion for the provided prompt and parameters
-     * @param {CreateCompletionRequest} createCompletionRequest
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof OpenAIApi
-     */
     createCompletion(createCompletionRequest, options) {
-        return exports.OpenAIApiFp(this.configuration).createCompletion(createCompletionRequest, options).then((request) => request(this.axios, this.basePath));
+        if (createCompletionRequest.stream) {
+            return exports.OpenAIApiFp(this.configuration).createCompletion(Object.assign(Object.assign({}, createCompletionRequest), { stream: true }), options).then((request) => request(this.basePath));
+        }
+        else {
+            return exports.OpenAIApiFp(this.configuration).createCompletion(Object.assign(Object.assign({}, createCompletionRequest), { stream: false }), options).then((request) => request(this.basePath));
+        }
     }
     /**
      *
@@ -1769,7 +1800,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     createEdit(createEditRequest, options) {
-        return exports.OpenAIApiFp(this.configuration).createEdit(createEditRequest, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).createEdit(createEditRequest, options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -1780,7 +1811,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     createEmbedding(createEmbeddingRequest, options) {
-        return exports.OpenAIApiFp(this.configuration).createEmbedding(createEmbeddingRequest, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).createEmbedding(createEmbeddingRequest, options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -1792,7 +1823,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     createFile(file, purpose, options) {
-        return exports.OpenAIApiFp(this.configuration).createFile(file, purpose, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).createFile(file, purpose, options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -1803,7 +1834,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     createFineTune(createFineTuneRequest, options) {
-        return exports.OpenAIApiFp(this.configuration).createFineTune(createFineTuneRequest, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).createFineTune(createFineTuneRequest, options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -1814,7 +1845,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     createImage(createImageRequest, options) {
-        return exports.OpenAIApiFp(this.configuration).createImage(createImageRequest, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).createImage(createImageRequest, options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -1831,7 +1862,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     createImageEdit(image, prompt, mask, n, size, responseFormat, user, options) {
-        return exports.OpenAIApiFp(this.configuration).createImageEdit(image, prompt, mask, n, size, responseFormat, user, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).createImageEdit(image, prompt, mask, n, size, responseFormat, user, options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -1846,7 +1877,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     createImageVariation(image, n, size, responseFormat, user, options) {
-        return exports.OpenAIApiFp(this.configuration).createImageVariation(image, n, size, responseFormat, user, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).createImageVariation(image, n, size, responseFormat, user, options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -1857,7 +1888,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     createModeration(createModerationRequest, options) {
-        return exports.OpenAIApiFp(this.configuration).createModeration(createModerationRequest, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).createModeration(createModerationRequest, options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -1870,7 +1901,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     createSearch(engineId, createSearchRequest, options) {
-        return exports.OpenAIApiFp(this.configuration).createSearch(engineId, createSearchRequest, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).createSearch(engineId, createSearchRequest, options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -1886,7 +1917,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     createTranscription(file, model, prompt, responseFormat, temperature, language, options) {
-        return exports.OpenAIApiFp(this.configuration).createTranscription(file, model, prompt, responseFormat, temperature, language, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).createTranscription(file, model, prompt, responseFormat, temperature, language, options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -1901,7 +1932,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     createTranslation(file, model, prompt, responseFormat, temperature, options) {
-        return exports.OpenAIApiFp(this.configuration).createTranslation(file, model, prompt, responseFormat, temperature, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).createTranslation(file, model, prompt, responseFormat, temperature, options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -1912,7 +1943,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     deleteFile(fileId, options) {
-        return exports.OpenAIApiFp(this.configuration).deleteFile(fileId, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).deleteFile(fileId, options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -1923,7 +1954,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     deleteModel(model, options) {
-        return exports.OpenAIApiFp(this.configuration).deleteModel(model, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).deleteModel(model, options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -1934,7 +1965,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     downloadFile(fileId, options) {
-        return exports.OpenAIApiFp(this.configuration).downloadFile(fileId, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).downloadFile(fileId, options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -1945,7 +1976,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     listEngines(options) {
-        return exports.OpenAIApiFp(this.configuration).listEngines(options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).listEngines(options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -1955,7 +1986,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     listFiles(options) {
-        return exports.OpenAIApiFp(this.configuration).listFiles(options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).listFiles(options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -1967,7 +1998,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     listFineTuneEvents(fineTuneId, stream, options) {
-        return exports.OpenAIApiFp(this.configuration).listFineTuneEvents(fineTuneId, stream, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).listFineTuneEvents(fineTuneId, stream, options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -1977,7 +2008,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     listFineTunes(options) {
-        return exports.OpenAIApiFp(this.configuration).listFineTunes(options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).listFineTunes(options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -1987,7 +2018,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     listModels(options) {
-        return exports.OpenAIApiFp(this.configuration).listModels(options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).listModels(options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -1999,7 +2030,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     retrieveEngine(engineId, options) {
-        return exports.OpenAIApiFp(this.configuration).retrieveEngine(engineId, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).retrieveEngine(engineId, options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -2010,7 +2041,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     retrieveFile(fileId, options) {
-        return exports.OpenAIApiFp(this.configuration).retrieveFile(fileId, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).retrieveFile(fileId, options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -2021,7 +2052,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     retrieveFineTune(fineTuneId, options) {
-        return exports.OpenAIApiFp(this.configuration).retrieveFineTune(fineTuneId, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).retrieveFineTune(fineTuneId, options).then((request) => request(this.basePath));
     }
     /**
      *
@@ -2032,7 +2063,7 @@ class OpenAIApi extends base_1.BaseAPI {
      * @memberof OpenAIApi
      */
     retrieveModel(model, options) {
-        return exports.OpenAIApiFp(this.configuration).retrieveModel(model, options).then((request) => request(this.axios, this.basePath));
+        return exports.OpenAIApiFp(this.configuration).retrieveModel(model, options).then((request) => request(this.basePath));
     }
 }
 exports.OpenAIApi = OpenAIApi;

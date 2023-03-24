@@ -10,8 +10,7 @@
  * Do not edit the class manually.
  */
 import type { Configuration } from "./configuration";
-import type { RequestArgs } from "./base";
-import type { AxiosInstance, AxiosResponse } from 'axios';
+import type { RequestArgs, AxiosResponse } from "./base";
 /**
  *
  * @export
@@ -62,4 +61,9 @@ export declare const toPathString: (url: URL) => string;
  *
  * @export
  */
-export declare const createRequestFunction: (axiosArgs: RequestArgs, globalAxios: AxiosInstance, BASE_PATH: string, configuration?: Configuration) => <T = unknown, R = AxiosResponse<T, any>>(axios?: AxiosInstance, basePath?: string) => Promise<R>;
+export declare const createStreamFunction: (axiosArgs: RequestArgs, BASE_PATH: string, configuration?: Configuration) => (basePath?: string) => Promise<AxiosResponse<ReadableStream>>;
+/**
+ *
+ * @export
+ */
+export declare const createRequestFunction: (axiosArgs: RequestArgs, BASE_PATH: string, configuration?: Configuration) => <T = unknown>(basePath?: string) => Promise<AxiosResponse<T, any>>;

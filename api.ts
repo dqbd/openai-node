@@ -14,12 +14,10 @@
 
 
 import type { Configuration } from './configuration';
-import type { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios';
-import globalAxios from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
-import type { RequestArgs } from './base';
+import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction, createStreamFunction } from './common';
+import type { RequestArgs, AxiosRequestConfig, AxiosPromise } from './base';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError } from './base';
 
@@ -2987,9 +2985,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async cancelFineTune(fineTuneId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FineTune>> {
+        async cancelFineTune(fineTuneId: string, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<FineTune>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.cancelFineTune(fineTuneId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -2999,20 +2997,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @deprecated
          * @throws {RequiredError}
          */
-        async createAnswer(createAnswerRequest: CreateAnswerRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateAnswerResponse>> {
+        async createAnswer(createAnswerRequest: CreateAnswerRequest, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<CreateAnswerResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createAnswer(createAnswerRequest, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-        /**
-         * 
-         * @summary Creates a completion for the chat message
-         * @param {CreateChatCompletionRequest} createChatCompletionRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createChatCompletion(createChatCompletionRequest: CreateChatCompletionRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateChatCompletionResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createChatCompletion(createChatCompletionRequest, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3022,21 +3009,31 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @deprecated
          * @throws {RequiredError}
          */
-        async createClassification(createClassificationRequest: CreateClassificationRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateClassificationResponse>> {
+        async createClassification(createClassificationRequest: CreateClassificationRequest, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<CreateClassificationResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createClassification(createClassificationRequest, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
-         * 
-         * @summary Creates a completion for the provided prompt and parameters
-         * @param {CreateCompletionRequest} createCompletionRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async createCompletion(createCompletionRequest: CreateCompletionRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateCompletionResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createCompletion(createCompletionRequest, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
+        * 
+        * @summary Creates a completion for the chat message
+        * @param {CreateChatCompletionRequest} createChatCompletionRequest 
+        * @param {*} [options] Override http request option.
+        * @throws {RequiredError}
+        */
+        createChatCompletion: (() => {
+            async function createChatCompletion(createChatCompletionRequest: CreateChatCompletionRequest & { stream?: false }, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<CreateChatCompletionResponse>>;
+            async function createChatCompletion(createChatCompletionRequest: CreateChatCompletionRequest & { stream: true }, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<ReadableStream>>;
+            async function createChatCompletion(createChatCompletionRequest: CreateChatCompletionRequest, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<CreateChatCompletionResponse | ReadableStream>>{
+                if (createChatCompletionRequest.stream) {
+                    const localVarAxiosArgs = await localVarAxiosParamCreator.createChatCompletion({ ...createChatCompletionRequest, stream: true }, options);
+                    return createStreamFunction(localVarAxiosArgs, BASE_PATH, configuration);
+                } else {
+                    const localVarAxiosArgs = await localVarAxiosParamCreator.createChatCompletion({ ...createChatCompletionRequest, stream: false }, options);
+                    return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
+                }
+            };
+            return createChatCompletion;
+        })(),
         /**
          * 
          * @summary Creates a new edit for the provided input, instruction, and parameters.
@@ -3044,9 +3041,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createEdit(createEditRequest: CreateEditRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateEditResponse>> {
+        async createEdit(createEditRequest: CreateEditRequest, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<CreateEditResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createEdit(createEditRequest, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3055,9 +3052,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createEmbedding(createEmbeddingRequest: CreateEmbeddingRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateEmbeddingResponse>> {
+        async createEmbedding(createEmbeddingRequest: CreateEmbeddingRequest, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<CreateEmbeddingResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createEmbedding(createEmbeddingRequest, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3067,10 +3064,31 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createFile(file: File, purpose: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OpenAIFile>> {
+        async createFile(file: File, purpose: string, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<OpenAIFile>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createFile(file, purpose, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
+        /**
+        * 
+        * @summary Creates a completion for the provided prompt and parameters
+        * @param {CreateCompletionRequest} createCompletionRequest 
+        * @param {*} [options] Override http request option.
+        * @throws {RequiredError}
+        */
+        createCompletion: (() => {
+            async function createCompletion(createCompletionRequest: CreateCompletionRequest & { stream?: false }, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<CreateCompletionResponse>>;
+            async function createCompletion(createCompletionRequest: CreateCompletionRequest & { stream: true }, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<ReadableStream>>;
+            async function createCompletion(createCompletionRequest: CreateCompletionRequest, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<CreateCompletionResponse | ReadableStream>>{
+                if (createCompletionRequest.stream) {
+                    const localVarAxiosArgs = await localVarAxiosParamCreator.createCompletion({ ...createCompletionRequest, stream: true }, options);
+                    return createStreamFunction(localVarAxiosArgs, BASE_PATH, configuration);
+                } else {
+                    const localVarAxiosArgs = await localVarAxiosParamCreator.createCompletion({ ...createCompletionRequest, stream: false }, options);
+                    return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
+                }
+            };
+            return createCompletion;
+        })(),
         /**
          * 
          * @summary Creates a job that fine-tunes a specified model from a given dataset.  Response includes details of the enqueued job including job status and the name of the fine-tuned models once complete.  [Learn more about Fine-tuning](/docs/guides/fine-tuning) 
@@ -3078,9 +3096,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createFineTune(createFineTuneRequest: CreateFineTuneRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FineTune>> {
+        async createFineTune(createFineTuneRequest: CreateFineTuneRequest, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<FineTune>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createFineTune(createFineTuneRequest, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3089,9 +3107,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createImage(createImageRequest: CreateImageRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ImagesResponse>> {
+        async createImage(createImageRequest: CreateImageRequest, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<ImagesResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createImage(createImageRequest, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3106,9 +3124,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createImageEdit(image: File, prompt: string, mask?: File, n?: number, size?: string, responseFormat?: string, user?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ImagesResponse>> {
+        async createImageEdit(image: File, prompt: string, mask?: File, n?: number, size?: string, responseFormat?: string, user?: string, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<ImagesResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createImageEdit(image, prompt, mask, n, size, responseFormat, user, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3121,9 +3139,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createImageVariation(image: File, n?: number, size?: string, responseFormat?: string, user?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ImagesResponse>> {
+        async createImageVariation(image: File, n?: number, size?: string, responseFormat?: string, user?: string, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<ImagesResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createImageVariation(image, n, size, responseFormat, user, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3132,9 +3150,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createModeration(createModerationRequest: CreateModerationRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateModerationResponse>> {
+        async createModeration(createModerationRequest: CreateModerationRequest, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<CreateModerationResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createModeration(createModerationRequest, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3145,9 +3163,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @deprecated
          * @throws {RequiredError}
          */
-        async createSearch(engineId: string, createSearchRequest: CreateSearchRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateSearchResponse>> {
+        async createSearch(engineId: string, createSearchRequest: CreateSearchRequest, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<CreateSearchResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createSearch(engineId, createSearchRequest, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3161,9 +3179,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createTranscription(file: File, model: string, prompt?: string, responseFormat?: string, temperature?: number, language?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateTranscriptionResponse>> {
+        async createTranscription(file: File, model: string, prompt?: string, responseFormat?: string, temperature?: number, language?: string, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<CreateTranscriptionResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createTranscription(file, model, prompt, responseFormat, temperature, language, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3176,9 +3194,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createTranslation(file: File, model: string, prompt?: string, responseFormat?: string, temperature?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CreateTranslationResponse>> {
+        async createTranslation(file: File, model: string, prompt?: string, responseFormat?: string, temperature?: number, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<CreateTranslationResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.createTranslation(file, model, prompt, responseFormat, temperature, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3187,9 +3205,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteFile(fileId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DeleteFileResponse>> {
+        async deleteFile(fileId: string, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<DeleteFileResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteFile(fileId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3198,9 +3216,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteModel(model: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DeleteModelResponse>> {
+        async deleteModel(model: string, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<DeleteModelResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteModel(model, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3209,9 +3227,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async downloadFile(fileId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+        async downloadFile(fileId: string, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<string>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.downloadFile(fileId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3220,9 +3238,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @deprecated
          * @throws {RequiredError}
          */
-        async listEngines(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListEnginesResponse>> {
+        async listEngines(options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<ListEnginesResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listEngines(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3230,9 +3248,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listFiles(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListFilesResponse>> {
+        async listFiles(options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<ListFilesResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listFiles(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3242,9 +3260,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listFineTuneEvents(fineTuneId: string, stream?: boolean, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListFineTuneEventsResponse>> {
+        async listFineTuneEvents(fineTuneId: string, stream?: boolean, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<ListFineTuneEventsResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listFineTuneEvents(fineTuneId, stream, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3252,9 +3270,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listFineTunes(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListFineTunesResponse>> {
+        async listFineTunes(options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<ListFineTunesResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listFineTunes(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3262,9 +3280,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listModels(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListModelsResponse>> {
+        async listModels(options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<ListModelsResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listModels(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3274,9 +3292,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @deprecated
          * @throws {RequiredError}
          */
-        async retrieveEngine(engineId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Engine>> {
+        async retrieveEngine(engineId: string, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<Engine>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveEngine(engineId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3285,9 +3303,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async retrieveFile(fileId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OpenAIFile>> {
+        async retrieveFile(fileId: string, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<OpenAIFile>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveFile(fileId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3296,9 +3314,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async retrieveFineTune(fineTuneId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<FineTune>> {
+        async retrieveFineTune(fineTuneId: string, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<FineTune>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveFineTune(fineTuneId, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
         /**
          * 
@@ -3307,9 +3325,9 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async retrieveModel(model: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Model>> {
+        async retrieveModel(model: string, options?: AxiosRequestConfig): Promise<(basePath?: string) => AxiosPromise<Model>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.retrieveModel(model, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+            return createRequestFunction(localVarAxiosArgs, BASE_PATH, configuration);
         },
     }
 };
@@ -3318,7 +3336,7 @@ export const OpenAIApiFp = function(configuration?: Configuration) {
  * OpenAIApi - factory interface
  * @export
  */
-export const OpenAIApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+export const OpenAIApiFactory = function (configuration?: Configuration, basePath?: string) {
     const localVarFp = OpenAIApiFp(configuration)
     return {
         /**
@@ -3329,7 +3347,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         cancelFineTune(fineTuneId: string, options?: any): AxiosPromise<FineTune> {
-            return localVarFp.cancelFineTune(fineTuneId, options).then((request) => request(axios, basePath));
+            return localVarFp.cancelFineTune(fineTuneId, options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3340,17 +3358,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         createAnswer(createAnswerRequest: CreateAnswerRequest, options?: any): AxiosPromise<CreateAnswerResponse> {
-            return localVarFp.createAnswer(createAnswerRequest, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Creates a completion for the chat message
-         * @param {CreateChatCompletionRequest} createChatCompletionRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createChatCompletion(createChatCompletionRequest: CreateChatCompletionRequest, options?: any): AxiosPromise<CreateChatCompletionResponse> {
-            return localVarFp.createChatCompletion(createChatCompletionRequest, options).then((request) => request(axios, basePath));
+            return localVarFp.createAnswer(createAnswerRequest, options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3361,18 +3369,27 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         createClassification(createClassificationRequest: CreateClassificationRequest, options?: any): AxiosPromise<CreateClassificationResponse> {
-            return localVarFp.createClassification(createClassificationRequest, options).then((request) => request(axios, basePath));
+            return localVarFp.createClassification(createClassificationRequest, options).then((request) => request(basePath));
         },
         /**
-         * 
-         * @summary Creates a completion for the provided prompt and parameters
-         * @param {CreateCompletionRequest} createCompletionRequest 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        createCompletion(createCompletionRequest: CreateCompletionRequest, options?: any): AxiosPromise<CreateCompletionResponse> {
-            return localVarFp.createCompletion(createCompletionRequest, options).then((request) => request(axios, basePath));
-        },
+        * 
+        * @summary Creates a completion for the chat message
+        * @param {CreateChatCompletionRequest} createChatCompletionRequest 
+        * @param {*} [options] Override http request option.
+        * @throws {RequiredError}
+        */
+        createChatCompletion: (() => {
+            function createChatCompletion(createChatCompletionRequest: CreateChatCompletionRequest & { stream?: false }, options?: any): AxiosPromise<CreateChatCompletionResponse>;
+            function createChatCompletion(createChatCompletionRequest: CreateChatCompletionRequest & { stream: true }, options?: any): AxiosPromise<ReadableStream>;
+            function createChatCompletion(createChatCompletionRequest: CreateChatCompletionRequest, options?: any): AxiosPromise<CreateChatCompletionResponse | ReadableStream>{
+                if (createChatCompletionRequest.stream) {
+                    return localVarFp.createChatCompletion({ ...createChatCompletionRequest, stream: true }, options).then((request) => request(basePath));
+                } else {
+                    return localVarFp.createChatCompletion({ ...createChatCompletionRequest, stream: false }, options).then((request) => request(basePath));
+                }
+            };
+            return createChatCompletion;
+        })(),
         /**
          * 
          * @summary Creates a new edit for the provided input, instruction, and parameters.
@@ -3381,7 +3398,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         createEdit(createEditRequest: CreateEditRequest, options?: any): AxiosPromise<CreateEditResponse> {
-            return localVarFp.createEdit(createEditRequest, options).then((request) => request(axios, basePath));
+            return localVarFp.createEdit(createEditRequest, options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3391,7 +3408,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         createEmbedding(createEmbeddingRequest: CreateEmbeddingRequest, options?: any): AxiosPromise<CreateEmbeddingResponse> {
-            return localVarFp.createEmbedding(createEmbeddingRequest, options).then((request) => request(axios, basePath));
+            return localVarFp.createEmbedding(createEmbeddingRequest, options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3402,8 +3419,27 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         createFile(file: File, purpose: string, options?: any): AxiosPromise<OpenAIFile> {
-            return localVarFp.createFile(file, purpose, options).then((request) => request(axios, basePath));
+            return localVarFp.createFile(file, purpose, options).then((request) => request(basePath));
         },
+        /**
+        * 
+        * @summary Creates a completion for the provided prompt and parameters
+        * @param {CreateCompletionRequest} createCompletionRequest 
+        * @param {*} [options] Override http request option.
+        * @throws {RequiredError}
+        */
+        createCompletion: (() => {
+            function createCompletion(createCompletionRequest: CreateCompletionRequest & { stream?: false }, options?: any): AxiosPromise<CreateCompletionResponse>;
+            function createCompletion(createCompletionRequest: CreateCompletionRequest & { stream: true }, options?: any): AxiosPromise<ReadableStream>;
+            function createCompletion(createCompletionRequest: CreateCompletionRequest, options?: any): AxiosPromise<CreateCompletionResponse | ReadableStream>{
+                if (createCompletionRequest.stream) {
+                    return localVarFp.createCompletion({ ...createCompletionRequest, stream: true }, options).then((request) => request(basePath));
+                } else {
+                    return localVarFp.createCompletion({ ...createCompletionRequest, stream: false }, options).then((request) => request(basePath));
+                }
+            };
+            return createCompletion;
+        })(),
         /**
          * 
          * @summary Creates a job that fine-tunes a specified model from a given dataset.  Response includes details of the enqueued job including job status and the name of the fine-tuned models once complete.  [Learn more about Fine-tuning](/docs/guides/fine-tuning) 
@@ -3412,7 +3448,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         createFineTune(createFineTuneRequest: CreateFineTuneRequest, options?: any): AxiosPromise<FineTune> {
-            return localVarFp.createFineTune(createFineTuneRequest, options).then((request) => request(axios, basePath));
+            return localVarFp.createFineTune(createFineTuneRequest, options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3422,7 +3458,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         createImage(createImageRequest: CreateImageRequest, options?: any): AxiosPromise<ImagesResponse> {
-            return localVarFp.createImage(createImageRequest, options).then((request) => request(axios, basePath));
+            return localVarFp.createImage(createImageRequest, options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3438,7 +3474,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         createImageEdit(image: File, prompt: string, mask?: File, n?: number, size?: string, responseFormat?: string, user?: string, options?: any): AxiosPromise<ImagesResponse> {
-            return localVarFp.createImageEdit(image, prompt, mask, n, size, responseFormat, user, options).then((request) => request(axios, basePath));
+            return localVarFp.createImageEdit(image, prompt, mask, n, size, responseFormat, user, options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3452,7 +3488,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         createImageVariation(image: File, n?: number, size?: string, responseFormat?: string, user?: string, options?: any): AxiosPromise<ImagesResponse> {
-            return localVarFp.createImageVariation(image, n, size, responseFormat, user, options).then((request) => request(axios, basePath));
+            return localVarFp.createImageVariation(image, n, size, responseFormat, user, options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3462,7 +3498,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         createModeration(createModerationRequest: CreateModerationRequest, options?: any): AxiosPromise<CreateModerationResponse> {
-            return localVarFp.createModeration(createModerationRequest, options).then((request) => request(axios, basePath));
+            return localVarFp.createModeration(createModerationRequest, options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3474,7 +3510,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         createSearch(engineId: string, createSearchRequest: CreateSearchRequest, options?: any): AxiosPromise<CreateSearchResponse> {
-            return localVarFp.createSearch(engineId, createSearchRequest, options).then((request) => request(axios, basePath));
+            return localVarFp.createSearch(engineId, createSearchRequest, options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3489,7 +3525,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         createTranscription(file: File, model: string, prompt?: string, responseFormat?: string, temperature?: number, language?: string, options?: any): AxiosPromise<CreateTranscriptionResponse> {
-            return localVarFp.createTranscription(file, model, prompt, responseFormat, temperature, language, options).then((request) => request(axios, basePath));
+            return localVarFp.createTranscription(file, model, prompt, responseFormat, temperature, language, options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3503,7 +3539,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         createTranslation(file: File, model: string, prompt?: string, responseFormat?: string, temperature?: number, options?: any): AxiosPromise<CreateTranslationResponse> {
-            return localVarFp.createTranslation(file, model, prompt, responseFormat, temperature, options).then((request) => request(axios, basePath));
+            return localVarFp.createTranslation(file, model, prompt, responseFormat, temperature, options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3513,7 +3549,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         deleteFile(fileId: string, options?: any): AxiosPromise<DeleteFileResponse> {
-            return localVarFp.deleteFile(fileId, options).then((request) => request(axios, basePath));
+            return localVarFp.deleteFile(fileId, options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3523,7 +3559,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         deleteModel(model: string, options?: any): AxiosPromise<DeleteModelResponse> {
-            return localVarFp.deleteModel(model, options).then((request) => request(axios, basePath));
+            return localVarFp.deleteModel(model, options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3533,7 +3569,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         downloadFile(fileId: string, options?: any): AxiosPromise<string> {
-            return localVarFp.downloadFile(fileId, options).then((request) => request(axios, basePath));
+            return localVarFp.downloadFile(fileId, options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3543,7 +3579,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         listEngines(options?: any): AxiosPromise<ListEnginesResponse> {
-            return localVarFp.listEngines(options).then((request) => request(axios, basePath));
+            return localVarFp.listEngines(options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3552,7 +3588,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         listFiles(options?: any): AxiosPromise<ListFilesResponse> {
-            return localVarFp.listFiles(options).then((request) => request(axios, basePath));
+            return localVarFp.listFiles(options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3563,7 +3599,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         listFineTuneEvents(fineTuneId: string, stream?: boolean, options?: any): AxiosPromise<ListFineTuneEventsResponse> {
-            return localVarFp.listFineTuneEvents(fineTuneId, stream, options).then((request) => request(axios, basePath));
+            return localVarFp.listFineTuneEvents(fineTuneId, stream, options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3572,7 +3608,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         listFineTunes(options?: any): AxiosPromise<ListFineTunesResponse> {
-            return localVarFp.listFineTunes(options).then((request) => request(axios, basePath));
+            return localVarFp.listFineTunes(options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3581,7 +3617,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         listModels(options?: any): AxiosPromise<ListModelsResponse> {
-            return localVarFp.listModels(options).then((request) => request(axios, basePath));
+            return localVarFp.listModels(options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3592,7 +3628,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         retrieveEngine(engineId: string, options?: any): AxiosPromise<Engine> {
-            return localVarFp.retrieveEngine(engineId, options).then((request) => request(axios, basePath));
+            return localVarFp.retrieveEngine(engineId, options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3602,7 +3638,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         retrieveFile(fileId: string, options?: any): AxiosPromise<OpenAIFile> {
-            return localVarFp.retrieveFile(fileId, options).then((request) => request(axios, basePath));
+            return localVarFp.retrieveFile(fileId, options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3612,7 +3648,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         retrieveFineTune(fineTuneId: string, options?: any): AxiosPromise<FineTune> {
-            return localVarFp.retrieveFineTune(fineTuneId, options).then((request) => request(axios, basePath));
+            return localVarFp.retrieveFineTune(fineTuneId, options).then((request) => request(basePath));
         },
         /**
          * 
@@ -3622,7 +3658,7 @@ export const OpenAIApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         retrieveModel(model: string, options?: any): AxiosPromise<Model> {
-            return localVarFp.retrieveModel(model, options).then((request) => request(axios, basePath));
+            return localVarFp.retrieveModel(model, options).then((request) => request(basePath));
         },
     };
 };
@@ -3643,7 +3679,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public cancelFineTune(fineTuneId: string, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).cancelFineTune(fineTuneId, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).cancelFineTune(fineTuneId, options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3656,19 +3692,25 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public createAnswer(createAnswerRequest: CreateAnswerRequest, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).createAnswer(createAnswerRequest, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).createAnswer(createAnswerRequest, options).then((request) => request(this.basePath));
     }
 
     /**
-     * 
-     * @summary Creates a completion for the chat message
-     * @param {CreateChatCompletionRequest} createChatCompletionRequest 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof OpenAIApi
-     */
+    * 
+    * @summary Creates a completion for the chat message
+    * @param {CreateChatCompletionRequest} createChatCompletionRequest 
+    * @param {*} [options] Override http request option.
+    * @throws {RequiredError}
+    * @memberof OpenAIApi
+    */
+    public createChatCompletion(createChatCompletionRequest: CreateChatCompletionRequest & { stream: true }, options?: AxiosRequestConfig): AxiosPromise<ReadableStream>;
+    public createChatCompletion(createChatCompletionRequest: CreateChatCompletionRequest & { stream?: false }, options?: AxiosRequestConfig): AxiosPromise<CreateChatCompletionResponse>;
     public createChatCompletion(createChatCompletionRequest: CreateChatCompletionRequest, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).createChatCompletion(createChatCompletionRequest, options).then((request) => request(this.axios, this.basePath));
+        if (createChatCompletionRequest.stream) {
+            return OpenAIApiFp(this.configuration).createChatCompletion({ ...createChatCompletionRequest, stream: true }, options).then((request) => request(this.basePath));
+        } else {
+            return OpenAIApiFp(this.configuration).createChatCompletion({ ...createChatCompletionRequest, stream: false }, options).then((request) => request(this.basePath));
+        }
     }
 
     /**
@@ -3681,19 +3723,25 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public createClassification(createClassificationRequest: CreateClassificationRequest, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).createClassification(createClassificationRequest, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).createClassification(createClassificationRequest, options).then((request) => request(this.basePath));
     }
 
     /**
-     * 
-     * @summary Creates a completion for the provided prompt and parameters
-     * @param {CreateCompletionRequest} createCompletionRequest 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof OpenAIApi
-     */
+    * 
+    * @summary Creates a completion for the provided prompt and parameters
+    * @param {CreateCompletionRequest} createCompletionRequest 
+    * @param {*} [options] Override http request option.
+    * @throws {RequiredError}
+    * @memberof OpenAIApi
+    */
+    public createCompletion(createCompletionRequest: CreateCompletionRequest & { stream: true }, options?: AxiosRequestConfig): AxiosPromise<ReadableStream>;
+    public createCompletion(createCompletionRequest: CreateCompletionRequest & { stream?: false }, options?: AxiosRequestConfig): AxiosPromise<CreateCompletionResponse>;
     public createCompletion(createCompletionRequest: CreateCompletionRequest, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).createCompletion(createCompletionRequest, options).then((request) => request(this.axios, this.basePath));
+        if (createCompletionRequest.stream) {
+            return OpenAIApiFp(this.configuration).createCompletion({ ...createCompletionRequest, stream: true }, options).then((request) => request(this.basePath));
+        } else {
+            return OpenAIApiFp(this.configuration).createCompletion({ ...createCompletionRequest, stream: false }, options).then((request) => request(this.basePath));
+        }
     }
 
     /**
@@ -3705,7 +3753,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public createEdit(createEditRequest: CreateEditRequest, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).createEdit(createEditRequest, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).createEdit(createEditRequest, options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3717,7 +3765,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public createEmbedding(createEmbeddingRequest: CreateEmbeddingRequest, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).createEmbedding(createEmbeddingRequest, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).createEmbedding(createEmbeddingRequest, options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3730,7 +3778,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public createFile(file: File, purpose: string, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).createFile(file, purpose, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).createFile(file, purpose, options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3742,7 +3790,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public createFineTune(createFineTuneRequest: CreateFineTuneRequest, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).createFineTune(createFineTuneRequest, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).createFineTune(createFineTuneRequest, options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3754,7 +3802,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public createImage(createImageRequest: CreateImageRequest, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).createImage(createImageRequest, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).createImage(createImageRequest, options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3772,7 +3820,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public createImageEdit(image: File, prompt: string, mask?: File, n?: number, size?: string, responseFormat?: string, user?: string, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).createImageEdit(image, prompt, mask, n, size, responseFormat, user, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).createImageEdit(image, prompt, mask, n, size, responseFormat, user, options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3788,7 +3836,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public createImageVariation(image: File, n?: number, size?: string, responseFormat?: string, user?: string, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).createImageVariation(image, n, size, responseFormat, user, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).createImageVariation(image, n, size, responseFormat, user, options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3800,7 +3848,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public createModeration(createModerationRequest: CreateModerationRequest, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).createModeration(createModerationRequest, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).createModeration(createModerationRequest, options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3814,7 +3862,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public createSearch(engineId: string, createSearchRequest: CreateSearchRequest, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).createSearch(engineId, createSearchRequest, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).createSearch(engineId, createSearchRequest, options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3831,7 +3879,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public createTranscription(file: File, model: string, prompt?: string, responseFormat?: string, temperature?: number, language?: string, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).createTranscription(file, model, prompt, responseFormat, temperature, language, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).createTranscription(file, model, prompt, responseFormat, temperature, language, options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3847,7 +3895,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public createTranslation(file: File, model: string, prompt?: string, responseFormat?: string, temperature?: number, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).createTranslation(file, model, prompt, responseFormat, temperature, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).createTranslation(file, model, prompt, responseFormat, temperature, options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3859,7 +3907,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public deleteFile(fileId: string, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).deleteFile(fileId, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).deleteFile(fileId, options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3871,7 +3919,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public deleteModel(model: string, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).deleteModel(model, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).deleteModel(model, options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3883,7 +3931,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public downloadFile(fileId: string, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).downloadFile(fileId, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).downloadFile(fileId, options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3895,7 +3943,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public listEngines(options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).listEngines(options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).listEngines(options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3906,7 +3954,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public listFiles(options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).listFiles(options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).listFiles(options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3919,7 +3967,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public listFineTuneEvents(fineTuneId: string, stream?: boolean, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).listFineTuneEvents(fineTuneId, stream, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).listFineTuneEvents(fineTuneId, stream, options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3930,7 +3978,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public listFineTunes(options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).listFineTunes(options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).listFineTunes(options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3941,7 +3989,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public listModels(options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).listModels(options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).listModels(options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3954,7 +4002,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public retrieveEngine(engineId: string, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).retrieveEngine(engineId, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).retrieveEngine(engineId, options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3966,7 +4014,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public retrieveFile(fileId: string, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).retrieveFile(fileId, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).retrieveFile(fileId, options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3978,7 +4026,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public retrieveFineTune(fineTuneId: string, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).retrieveFineTune(fineTuneId, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).retrieveFineTune(fineTuneId, options).then((request) => request(this.basePath));
     }
 
     /**
@@ -3990,7 +4038,7 @@ export class OpenAIApi extends BaseAPI {
      * @memberof OpenAIApi
      */
     public retrieveModel(model: string, options?: AxiosRequestConfig) {
-        return OpenAIApiFp(this.configuration).retrieveModel(model, options).then((request) => request(this.axios, this.basePath));
+        return OpenAIApiFp(this.configuration).retrieveModel(model, options).then((request) => request(this.basePath));
     }
 }
 

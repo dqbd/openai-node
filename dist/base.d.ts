@@ -10,7 +10,35 @@
  * Do not edit the class manually.
  */
 import type { Configuration } from './configuration';
-import type { AxiosInstance, AxiosRequestConfig } from 'axios';
+declare type Method = 'get' | 'GET' | 'delete' | 'DELETE' | 'head' | 'HEAD' | 'options' | 'OPTIONS' | 'post' | 'POST' | 'put' | 'PUT' | 'patch' | 'PATCH' | 'purge' | 'PURGE' | 'link' | 'LINK' | 'unlink' | 'UNLINK';
+declare type AxiosHeaderValue = string | string[] | number | boolean | null;
+interface RawAxiosHeaders {
+    [key: string]: AxiosHeaderValue;
+}
+declare type CommonRequestHeadersList = 'Accept' | 'Content-Length' | 'User-Agent' | 'Content-Encoding' | 'Authorization';
+declare type ContentType = AxiosHeaderValue | 'text/html' | 'text/plain' | 'multipart/form-data' | 'application/json' | 'application/x-www-form-urlencoded' | 'application/octet-stream';
+declare type RawAxiosRequestHeaders = Partial<RawAxiosHeaders & {
+    [Key in CommonRequestHeadersList]: AxiosHeaderValue;
+} & {
+    'Content-Type': ContentType;
+}>;
+interface AxiosBasicCredentials {
+    username: string;
+    password: string;
+}
+export interface AxiosRequestConfig<D = any> {
+    url?: string;
+    method?: Method | string;
+    auth?: AxiosBasicCredentials;
+    headers?: RawAxiosRequestHeaders;
+    data?: D;
+}
+export interface AxiosResponse<T = any, D = any> {
+    data: T;
+    status: number;
+    statusText: string;
+}
+export declare type AxiosPromise<T = any> = Promise<AxiosResponse<T>>;
 export declare const BASE_PATH: string;
 /**
  *
@@ -38,9 +66,8 @@ export interface RequestArgs {
  */
 export declare class BaseAPI {
     protected basePath: string;
-    protected axios: AxiosInstance;
     protected configuration: Configuration | undefined;
-    constructor(configuration?: Configuration, basePath?: string, axios?: AxiosInstance);
+    constructor(configuration?: Configuration, basePath?: string);
 }
 /**
  *
@@ -52,3 +79,4 @@ export declare class RequiredError extends Error {
     field: string;
     constructor(field: string, msg?: string);
 }
+export {};

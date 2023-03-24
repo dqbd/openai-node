@@ -22,7 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createRequestFunction = exports.toPathString = exports.serializeDataIfNeeded = exports.setSearchParams = exports.setOAuthToObject = exports.setBearerAuthToObject = exports.setBasicAuthToObject = exports.setApiKeyToObject = exports.assertParamExists = exports.DUMMY_BASE_URL = void 0;
+exports.createRequestFunction = exports.createStreamFunction = exports.toPathString = exports.serializeDataIfNeeded = exports.setSearchParams = exports.setOAuthToObject = exports.setBearerAuthToObject = exports.setBasicAuthToObject = exports.setApiKeyToObject = exports.assertParamExists = exports.DUMMY_BASE_URL = void 0;
 const base_1 = require("./base");
 /**
  *
@@ -143,9 +143,43 @@ exports.toPathString = function (url) {
  *
  * @export
  */
-exports.createRequestFunction = function (axiosArgs, globalAxios, BASE_PATH, configuration) {
-    return (axios = globalAxios, basePath = BASE_PATH) => {
+exports.createStreamFunction = function (axiosArgs, BASE_PATH, configuration) {
+    return (basePath = BASE_PATH) => __awaiter(this, void 0, void 0, function* () {
         const axiosRequestArgs = Object.assign(Object.assign({}, axiosArgs.options), { url: ((configuration === null || configuration === void 0 ? void 0 : configuration.basePath) || basePath) + axiosArgs.url });
-        return axios.request(axiosRequestArgs);
-    };
+        const res = yield fetch(axiosRequestArgs.url, {
+            method: axiosRequestArgs.method,
+            headers: axiosRequestArgs.headers,
+            body: axiosRequestArgs.data,
+        });
+        if (!res.ok) {
+            throw new Error(`Failed to fetch ${res.status}`);
+        }
+        return {
+            data: res.body,
+            status: res.status,
+            statusText: res.statusText,
+        };
+    });
+};
+/**
+ *
+ * @export
+ */
+exports.createRequestFunction = function (axiosArgs, BASE_PATH, configuration) {
+    return (basePath = BASE_PATH) => __awaiter(this, void 0, void 0, function* () {
+        const axiosRequestArgs = Object.assign(Object.assign({}, axiosArgs.options), { url: ((configuration === null || configuration === void 0 ? void 0 : configuration.basePath) || basePath) + axiosArgs.url });
+        const res = yield fetch(axiosRequestArgs.url, {
+            method: axiosRequestArgs.method,
+            headers: axiosRequestArgs.headers,
+            body: axiosRequestArgs.data,
+        });
+        if (!res.ok) {
+            throw new Error(`Failed to fetch ${res.status}`);
+        }
+        return {
+            data: (yield res.json()),
+            status: res.status,
+            statusText: res.statusText,
+        };
+    });
 };
